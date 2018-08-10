@@ -14,9 +14,6 @@ const withProvider = (initialState, GlobalProvider, currentComponent) =>
       currentComponent(this)
       this.state = props.initialState || initialState
     }
-
-
-
     render(){
       return (
         <GlobalProvider value={this.state} >

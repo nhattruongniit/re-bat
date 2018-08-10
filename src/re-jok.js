@@ -9,18 +9,27 @@ const globalConfig = {
     theme: {
       backgroundColor: 'red'
     },
+    loading: false,
     number: 0
   },
   actions: {
-    setName: (state) => {
-      // console.log(state)
-      return {
-        // ...state,
-        user: {
-          name: 'Tungtbt'
-        }
-      }
+    setName: (state, dispatch, value) => {
+
+      dispatch('pending')()
+
+      return new Promise(resolve => setTimeout(() => {
+        dispatch('fullfield')()
+        resolve({
+
+          user: {
+            name: 'Tungtbt',
+            age: 20
+          },
+        })
+      }, 1000))
     },
+    pending: () => ({loading: true}),
+    fullfield: () => ({loading: false}),
     InCre: state => {
       return {
         number: state.number + 1,
@@ -34,4 +43,4 @@ const globalConfig = {
   }
 }
 
-export const { Provider, connect, dispatch } = createStore(globalConfig)
+export const { Provider, connect, dispatch, subscribe } = createStore(globalConfig)

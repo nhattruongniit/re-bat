@@ -17,7 +17,7 @@ class ABC extends React.Component {
 ReactDOM.render(
   <Provider>
     <React.Fragment>
-      <App/>
+      <App myProps="Hello world"/>
       {/* <Test/> */}
       <ABC/>
     </React.Fragment>
