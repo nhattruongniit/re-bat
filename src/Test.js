@@ -10,7 +10,7 @@ class Test extends Component {
     return (
 
         <div className="App">
-          <h1>{!loading ? user.age : 'Loading....'}</h1>
+          <h1>{!loading ? user && user.age : 'Loading....'}</h1>
         <div>
           <button onClick={this.props.InCre}>Incre</button>
         <button onClick={this.props.DeCre}>Decre</button>

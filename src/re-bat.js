@@ -6,9 +6,33 @@ import withProvider from './Provider'
 
 import { logger } from './utils/logger'
 
+const getInitialState = (root) => {
+
+  if(typeof root !== 'object' || !root) return {}
+
+  let initialState = {}
+
+  return Object.keys(root)
+  .map(k =>
+    initialState =
+    {...initialState,
+      [k]: {...{...root[k].initialState}}
+    })
+}
+
 const createStore = globalConfig => {
   if(typeof globalConfig !== 'object') throw new Error('globalConfig must be object')
   const { initialState, actions } = globalConfig
+  // const { actions } = root
+
+  // let initialState = {}
+
+  // initialState = getInitialState(root)
+
+  // console.log(initialState)
+  console.log(initialState)
+  console.log(actions)
+
   const Context = React.createContext()
 
   let provider
@@ -22,13 +46,22 @@ const createStore = globalConfig => {
   }
 
   const subscribe = listener => {
+
+    let isSubscribe = true
+
     if(typeof listener !== 'function') throw new Error('Listener must be funtion')
 
     if(isDispatching) throw new Error('Something is executing, wait some seconds')
 
     listeners = [...listeners, listener]
 
-    return () => listeners.filter(l => l !== listener)
+    return () => {
+      if(!isSubscribe) return
+
+      isSubscribe = false
+
+      return listeners.filter(l => l !== listener)
+    }
 
   }
 
@@ -47,9 +80,11 @@ const createStore = globalConfig => {
 
         result = actions[type](state, dispatch, ...arg)
 
-        state = {...state, ...result}
+        if (process.env.NODE_ENV !== 'production') {
+           logger({state, result, type})
+        }
 
-        logger({state, result, type})
+        state = {...state, ...result}
 
       }
       finally {

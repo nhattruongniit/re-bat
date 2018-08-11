@@ -12,6 +12,7 @@ const withProvider = (initialState, GlobalProvider, currentComponent) =>
     constructor(props){
       super(props)
       currentComponent(this)
+      console.log(initialState)
       this.state = props.initialState || initialState
     }
     render(){
