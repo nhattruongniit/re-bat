@@ -4,6 +4,12 @@ import connected from './ConnectComponent'
 import type { WithConnect } from '../utils/types'
 import { isFunc } from '../utils'
 
+/*
+* @param {Consumer} is Context.Consumer
+* @param {dispatch} is funtion to dispatch actions
+* @returns {WrapperComponent} with component has state and funtion in store
+*/
+
 const withConnect: WithConnect = (Consumer, dispatch) => (mapStateToProps, mapDispatchToProps) => Component => props => {
 
   const displayName = `Connect(${Component.displayName || Component.name || 'Unknow'})`

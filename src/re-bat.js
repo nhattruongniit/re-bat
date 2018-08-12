@@ -8,6 +8,17 @@ import {logger, consoleError, getInitial} from './utils'
 
 import type { CurrentComponent, Dispatch, Context, Subscribe, CreateStore, GetState } from './utils/types'
 
+/*
+* @param {globalConfig} is Object has modules containes all state and actions what you want save to store
+* @returns {
+Provider,
+connect,
+dispatch,
+getState,
+subscribe
+}
+*/
+
 const createStore: CreateStore = globalConfig => {
   if (typeof globalConfig !== 'object')
     throw new Error('globalConfig must be object')
@@ -20,22 +31,27 @@ const createStore: CreateStore = globalConfig => {
   initialState = getInitial(root, 'initialState')
   actions = getInitial(root, 'actions')
 
-  // console.log(initialState)
-  console.log(initialState)
-  console.log(actions)
-
   const Context: Context = React.createContext()
 
   let provider
   let isDispatching = false
   let listeners = []
   let state = initialState
+
+  /*
+  * @param {seft} is Provider Component
+  */
+
   const currentComponent = self => {
-    console.log(self)
     provider = {
       setState: (key, state, callback) => self.customSetState(key, state, callback)
     }
   }
+
+  /*
+  * @param {listener} is function what you call everytime when you dispatch a action
+  * @returns {function} like unSubscrire function
+  */
 
   const subscribe: Subscribe = listener => {
 
@@ -52,7 +68,7 @@ const createStore: CreateStore = globalConfig => {
       listener
     ]
 
-    return() => {
+    return () => {
       if (!isSubscribe)
         return
 
@@ -63,12 +79,21 @@ const createStore: CreateStore = globalConfig => {
 
   }
 
+  /*
+  * @returns {any} current state in your store
+  */
+
   const getState: GetState = () => {
     if (isDispatching)
       throw new Error('Something is executing, wait some seconds')
 
     return state
   }
+
+  /*
+  * @param {type} is name of actions you register in module of store
+  * @param {key} is name of your module what you want to dispatch
+  */
 
   const dispatch: Dispatch = (type, key) => (...arg) => {
     if (!provider)
@@ -109,13 +134,12 @@ const createStore: CreateStore = globalConfig => {
           ...result
         }
 
-      console.log(state)
     } finally {
       isDispatching = false
     }
 
     listeners.forEach(l => l({getState}))
-    //
+    
     return result && typeof result.then === 'function'
       ? result.then(r => provider.setState(key, {
         ...state[key],

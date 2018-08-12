@@ -1,8 +1,17 @@
+/*
+* @param {value} to check is function or not
+* @returns {boolean}
+*/
 export const isFunc = value => value && typeof value === 'function'
 
+/*
+* @param {message} to console error in develop tools
+*/
 export const consoleError = message => console && console.error && console.error(message)
 
-
+/*
+* @param {type, state, result} is type of actions, prev state, and result after dispatch actions
+*/
 export const logger = ({type, state, result}) => {
   if(console && console.log){
     console.log('%c Prev state', 'color: rgba(0,0,0, .65) ; font-weight: 600;', state )
@@ -14,6 +23,12 @@ export const logger = ({type, state, result}) => {
   }
 }
 
+
+/*
+* @param root is globalConfig root
+* @param type is actions or state
+* @returns {initial} is Object all state or actions
+*/
 export const getInitial = (root, type) => {
 
   if(typeof root !== 'object' || !root) return {}
