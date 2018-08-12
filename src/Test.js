@@ -23,12 +23,12 @@ class Test extends Component {
 }
 
 export default connect((state) => ({
-  user: state.user,
-  number: state.number || 0,
-  loading: state.loading
+  user: state.module1.user,
+  number: state.module2.number || 0,
+  loading: state.module1.loading
 }),
 () => ({
-  InCre: dispatch('InCre'),
-  DeCre: dispatch('DeCre')
+  InCre: dispatch('InCre', 'module2'),
+  DeCre: dispatch('DeCre', 'module2')
 })
 )(Test)

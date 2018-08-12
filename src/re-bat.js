@@ -4,30 +4,19 @@ import * as React from 'react'
 import withConnect from './connect'
 import withProvider from './Provider'
 
-import { logger } from './utils/logger'
-
-const getInitialState = (root) => {
-
-  if(typeof root !== 'object' || !root) return {}
-
-  let initialState = {}
-
-  return Object.keys(root)
-  .map(k =>
-    initialState =
-    {...initialState,
-      [k]: {...{...root[k].initialState}}
-    })
-}
+import {logger, consoleError, getInitial} from './utils'
 
 const createStore = globalConfig => {
-  if(typeof globalConfig !== 'object') throw new Error('globalConfig must be object')
-  const { initialState, actions } = globalConfig
-  // const { actions } = root
+  if (typeof globalConfig !== 'object')
+    throw new Error('globalConfig must be object')
+    // const { initialState, actions } = globalConfig
+  const {root} = globalConfig
 
-  // let initialState = {}
+  let initialState = {}
+  let actions = {}
 
-  // initialState = getInitialState(root)
+  initialState = getInitial(root, 'initialState')
+  actions = getInitial(root, 'actions')
 
   // console.log(initialState)
   console.log(initialState)
@@ -40,8 +29,9 @@ const createStore = globalConfig => {
   let listeners = []
   let state = initialState
   const currentComponent = self => {
+    console.log(self)
     provider = {
-      setState: (state, callback) => self.setState(state, callback)
+      setState: (key, state, callback) => self.customSetState(key, state, callback)
     }
   }
 
@@ -49,14 +39,20 @@ const createStore = globalConfig => {
 
     let isSubscribe = true
 
-    if(typeof listener !== 'function') throw new Error('Listener must be funtion')
+    if (typeof listener !== 'function')
+      throw new Error('Listener must be funtion')
 
-    if(isDispatching) throw new Error('Something is executing, wait some seconds')
+    if (isDispatching)
+      throw new Error('Something is executing, wait some seconds')
 
-    listeners = [...listeners, listener]
+    listeners = [
+      ...listeners,
+      listener
+    ]
 
-    return () => {
-      if(!isSubscribe) return
+    return() => {
+      if (!isSubscribe)
+        return
 
       isSubscribe = false
 
@@ -66,48 +62,74 @@ const createStore = globalConfig => {
   }
 
   const getState = () => {
-    if(isDispatching) throw new Error('Something is executing, wait some seconds')
+    if (isDispatching)
+      throw new Error('Something is executing, wait some seconds')
 
-    return state;
+    return state
   }
 
-  const dispatch = (type) => (...arg) => {
-      if(!provider) throw new Error('<Provider /> is undefined')
+  const dispatch = (type, key) => (...arg) => {
+    if (!provider)
+      throw new Error('<Provider /> is undefined')
 
-      let result
-      try{
-        isDispatching = true
+    if (typeof key !== 'string' && !actions[key] && !state[key]) {
+      consoleError('Key is undefined')
+      return
+    }
 
-        result = actions[type](state, dispatch, ...arg)
+    if (!actions[key] || !actions[key][type] || typeof actions[key][type] !== 'function') {
+      consoleError('Actions is not function')
+      return
+    }
 
-        if (process.env.NODE_ENV !== 'production') {
-           logger({state, result, type})
+    let result
+    try {
+      isDispatching = true
+
+      result = actions[key][type]({
+        state: state[key],
+        dispatch,
+        rootState: state
+      }, ...arg)
+
+      // if (process.env.NODE_ENV !== 'production') {
+      //    logger({state, result, type})
+      // }
+
+      if (typeof result.then === 'function') {
+        result.then(r => state[key] = {
+          ...state[key],
+          ...r
+        })
+      } else
+        state[key] = {
+          ...state[key],
+          ...result
         }
 
-        state = {...state, ...result}
+      console.log(state)
+    } finally {
+      isDispatching = false
+    }
 
-      }
-      finally {
-        isDispatching = false
-      }
-
-      listeners.forEach(l => l({getState}))
-
-      return result.then ? result.then(r => provider.setState(r)) : provider.setState(result)
+    listeners.forEach(l => l({getState}))
+    //
+    return result && typeof result.then === 'function'
+      ? result.then(r => provider.setState(key, {
+        ...state[key],
+        ...r
+      }))
+      : provider.setState(key, {
+        ...state[key],
+        ...result
+      })
 
   }
 
   const Provider = withProvider(initialState, Context.Provider, currentComponent)
   const connect = withConnect(Context.Consumer, dispatch)
 
-
-  return {
-     Provider,
-     connect,
-     dispatch,
-     getState,
-     subscribe
-  }
+  return {Provider, connect, dispatch, getState, subscribe}
 
 }
 

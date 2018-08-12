@@ -20,7 +20,6 @@ class App extends Component {
     const {user, loading} = this.props
 
     return (
-
         <div className="App">
           <header>
 
@@ -38,8 +37,8 @@ class App extends Component {
 }
 
 export default connect(
-  (state, props) => ({...state}),
+  (state, props) => ({...state.module1}),
   dispatch => ({
-    setName: dispatch('setName')
+    setName: dispatch('setName', 'module1')
   })
 )(App);

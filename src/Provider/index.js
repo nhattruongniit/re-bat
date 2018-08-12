@@ -7,14 +7,43 @@ import * as React from 'react'
 * @seft is Provider component...because data is saved state in Provider so we need to this to change data
 */
 
-const withProvider = (initialState, GlobalProvider, currentComponent) =>
-  class ABC extends React.Component<{}>{
-    constructor(props){
+type Props = {
+  initialState?: Object,
+  children?: React$Node
+}
+
+type State = {
+  [string]: any
+}
+
+type SetState = (
+  key: string,
+  value: any,
+  callback: () => void
+) => void
+
+type WithProvider = (
+  initialState: State,
+  GlobalProvider: React$ComponentType<*>,
+  currentComponent: React$Node
+) => React$Node
+
+const withProvider: WithProvider = (initialState, GlobalProvider, currentComponent) =>
+  class Provider extends React.Component<Props, State>{
+    constructor(props: Props){
       super(props)
       currentComponent(this)
-      console.log(initialState)
       this.state = props.initialState || initialState
     }
+
+    customSetState: SetState = (key, value, callback) => {
+      const state = this.state
+      this.setState({
+        ...state,
+        [key]: value
+      }, callback)
+    }
+
     render(){
       return (
         <GlobalProvider value={this.state} >
