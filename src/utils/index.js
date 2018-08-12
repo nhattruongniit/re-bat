@@ -1,3 +1,5 @@
+export const isFunc = value => value && typeof value === 'function'
+
 export const consoleError = message => console && console.error && console.error(message)
 
 

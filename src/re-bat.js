@@ -6,7 +6,9 @@ import withProvider from './Provider'
 
 import {logger, consoleError, getInitial} from './utils'
 
-const createStore = globalConfig => {
+import type { CurrentComponent, Dispatch, Context, Subscribe, CreateStore, GetState } from './utils/types'
+
+const createStore: CreateStore = globalConfig => {
   if (typeof globalConfig !== 'object')
     throw new Error('globalConfig must be object')
     // const { initialState, actions } = globalConfig
@@ -22,7 +24,7 @@ const createStore = globalConfig => {
   console.log(initialState)
   console.log(actions)
 
-  const Context = React.createContext()
+  const Context: Context = React.createContext()
 
   let provider
   let isDispatching = false
@@ -35,7 +37,7 @@ const createStore = globalConfig => {
     }
   }
 
-  const subscribe = listener => {
+  const subscribe: Subscribe = listener => {
 
     let isSubscribe = true
 
@@ -61,14 +63,14 @@ const createStore = globalConfig => {
 
   }
 
-  const getState = () => {
+  const getState: GetState = () => {
     if (isDispatching)
       throw new Error('Something is executing, wait some seconds')
 
     return state
   }
 
-  const dispatch = (type, key) => (...arg) => {
+  const dispatch: Dispatch = (type, key) => (...arg) => {
     if (!provider)
       throw new Error('<Provider /> is undefined')
 
@@ -92,9 +94,9 @@ const createStore = globalConfig => {
         rootState: state
       }, ...arg)
 
-      // if (process.env.NODE_ENV !== 'production') {
-      //    logger({state, result, type})
-      // }
+      if (process.env.NODE_ENV !== 'production') {
+         logger({state, result, type})
+      }
 
       if (typeof result.then === 'function') {
         result.then(r => state[key] = {
