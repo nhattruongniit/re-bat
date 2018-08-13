@@ -2,6 +2,7 @@
 import * as React from 'react'
 
 import type { WithProvider, Props, State, SetState } from '../utils/types'
+import { logger } from '../utils'
 
 /*
 * @param {initialState} is data default when create store
@@ -18,11 +19,17 @@ const withProvider: WithProvider = (initialState, GlobalProvider, currentCompone
       this.state = props.initialState || initialState
     }
 
-    customSetState: SetState = (key, value, callback) => {
+    customSetState: SetState = (type, key, value, isLogger, callback) => {
+      const prevState = {...this.state}
+
       this.setState({
         ...this.state,
         [key]: {...value}
-      }, callback)
+      }, () => {
+        if (process.env.NODE_ENV !== 'production' && isLogger) {
+           logger({state: prevState, result: this.state, type: `${type} - ${key}`})
+        }
+      })
     }
 
     render(){

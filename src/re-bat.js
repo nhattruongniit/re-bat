@@ -4,7 +4,7 @@ import * as React from 'react'
 import withConnect from './connect'
 import withProvider from './Provider'
 
-import {logger, consoleError, getInitial} from './utils'
+import {consoleError, getInitial} from './utils'
 
 import type { CurrentComponent, Dispatch, Context, Subscribe, CreateStore, GetState } from './utils/types'
 
@@ -23,10 +23,11 @@ const createStore: CreateStore = globalConfig => {
   if (typeof globalConfig !== 'object')
     throw new Error('globalConfig must be object')
     // const { initialState, actions } = globalConfig
-  const {root} = globalConfig
+  const {root, logger} = globalConfig
 
   let initialState = {}
   let actions = {}
+  let isLogger = logger ? logger : false
 
   initialState = getInitial(root, 'initialState')
   actions = getInitial(root, 'actions')
@@ -44,7 +45,7 @@ const createStore: CreateStore = globalConfig => {
 
   const currentComponent = self => {
     provider = {
-      setState: (key, state, callback) => self.customSetState(key, state, callback)
+      setState: (type, key, state, isLogger, callback) => self.customSetState(type, key, state, isLogger, callback)
     }
   }
 
@@ -119,36 +120,28 @@ const createStore: CreateStore = globalConfig => {
         rootState: state
       }, ...arg)
 
-      if (process.env.NODE_ENV !== 'production') {
-         logger({state, result, type})
-      }
-
-      if (typeof result.then === 'function') {
-        result.then(r => state[key] = {
-          ...state[key],
-          ...r
-        })
+      if (result && typeof result.then === 'function') {
+        result.then(r => state = {...state, [key]: {...r}})
       } else
-        state[key] = {
-          ...state[key],
-          ...result
-        }
+      state = {...state, [key]: {...result}}
+
 
     } finally {
       isDispatching = false
+
     }
 
     listeners.forEach(l => l({getState}))
-    
+
     return result && typeof result.then === 'function'
-      ? result.then(r => provider.setState(key, {
+      ? result.then(r => provider.setState(type, key, {
         ...state[key],
         ...r
-      }))
-      : provider.setState(key, {
+      }, isLogger))
+      : provider.setState(type, key, {
         ...state[key],
         ...result
-      })
+      }, isLogger)
 
   }
 

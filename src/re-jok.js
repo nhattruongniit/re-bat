@@ -10,14 +10,11 @@ const globalConfig = {
             age: 18
           },
           loading: false,
-
       },
       actions: {
           setName: ({state, dispatch}, ...arg) => {
             dispatch('pending', 'module1')()
             return new Promise(resolve => setTimeout(() => {
-              dispatch('fullfield', 'module1')()
-              dispatch('InCre', 'module2')()
 
               resolve({
                 ...state,
@@ -26,10 +23,18 @@ const globalConfig = {
                   age: 20
                 },
               })
+              dispatch('fullfield', 'module1')()
+              dispatch('InCre', 'module2')()
             }, 1000))
           },
-      pending: () => ({loading: true}),
-      fullfield: () => ({loading: false}),
+      pending: ({state}) => ({
+        ...state,
+        loading: true
+      }),
+      fullfield: ({state}) => ({
+        ...state,
+        loading: false
+      }),
       },
     },
     module2: {
@@ -56,7 +61,8 @@ const globalConfig = {
       },
 
     }
-  }
+  },
+  logger: true
   // initialState: {
   //   [manageUser.key]: {...manageUser.initialState}
   // },

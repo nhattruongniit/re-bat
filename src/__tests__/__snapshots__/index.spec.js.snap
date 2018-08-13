@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Re-Bat Dispatch function can change data from <Provider/> 1`] = `
+<div>
+  <div>
+    0
+  </div>
+</div>
+`;
+
+exports[`Re-Bat Dispatch function can change data from <Provider/> 2`] = `
+<div>
+  <div>
+    2
+  </div>
+</div>
+`;
+
+exports[`Re-Bat Dispatch function can change data from <Provider/> 3`] = `
+<div>
+  <div>
+    1
+  </div>
+</div>
+`;
+
+exports[`Re-Bat connect can get data from <Provider /> 1`] = `
+<div>
+  <div>
+    0
+  </div>
+</div>
+`;

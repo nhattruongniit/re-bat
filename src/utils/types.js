@@ -16,7 +16,9 @@ type GlobalProps = {
 
 export type SetState = (
   key: string,
+  type: string,
   value: any,
+  isLogger: boolean,
   callback: () => void
 ) => void
 

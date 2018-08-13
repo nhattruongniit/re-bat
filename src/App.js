@@ -18,6 +18,7 @@ class App extends Component {
   render() {
    // console.log('Props App', this.props)
     const {user, loading} = this.props
+    // console.log(loading)
 
     return (
         <div className="App">
