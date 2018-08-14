@@ -2,7 +2,7 @@
 import * as React from 'react'
 import type {WithConnect}
 from '../utils/types'
-import { isFunc, consoleWarning, consoleError} from '../utils'
+import { isFunc, consoleError} from '../utils'
 
 /*
 * @param {Consumer} is Context.Consumer

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import renderer from 'react-test-renderer'
-import createStore from '../re-bat'
+import createStore from '../'
 import { shallow } from 'enzyme';
 
 import 'jest-enzyme';

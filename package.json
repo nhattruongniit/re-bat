@@ -1,20 +1,51 @@
 {
   "name": "re-bat",
   "version": "0.1.0",
-  "private": true,
-  "dependencies": {
+  "main": "core/index.js",
+  "module": "core/index.js",
+  "files": [
+    "core",
+    "README.md"
+  ],
+  "author": {
+    "name": "Tran Ba Thanh Tung",
+    "email": "tranbathanhtung222@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tranbathanhtung/re-bat"
+  },
+  "bugs": {
+    "url": "https://github.com/tranbathanhtung/re-bat/issues"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/tranbathanhtung/re-bat",
+  "keywords": [
+    "react",
+    "re-bat",
+    "state-management",
+    "redux",
+    "flux",
+    "mobx",
+    "context",
+    "javascript"
+  ],
+  "peerDependencies": {
     "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "react-scripts": "1.1.4"
+    "react-dom": "^16.4.2"
   },
   "scripts": {
     "flow": "flow",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build-scripts": "react-scripts build",
+    "build": "rm -rf core && NODE_ENV=production babel src --out-dir core --copy-files --ignore __tests__,spec.js,test.js,__snapshots__",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-scripts": "1.1.4",
     "babel-cli": "^6.26.0",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
