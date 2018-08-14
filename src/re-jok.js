@@ -24,7 +24,7 @@ const globalConfig = {
                 },
               })
               dispatch('fullfield', 'module1')()
-              dispatch('InCre', 'module2')()
+              // dispatch('InCre', 'module2')()
             }, 1000))
           },
       pending: ({state}) => ({
@@ -62,7 +62,7 @@ const globalConfig = {
 
     }
   },
-  logger: true
+  // logger: true
   // initialState: {
   //   [manageUser.key]: {...manageUser.initialState}
   // },

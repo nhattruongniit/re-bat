@@ -8,6 +8,7 @@ class App extends Component {
 
   componentDidMount(){
     // this.sb1 = subscribe(this.alert)
+    // console.log("hi")
 
   }
 
@@ -15,10 +16,17 @@ class App extends Component {
     alert(getState().user.name)
   }
 
+  // shouldComponentUpdate(nextProps){
+  //  console.log(this.props !== nextProps)
+  //  console.log(this.props)
+  //  console.log(nextProps)
+  //  if(JSON.stringify(this.props) !== JSON.stringify(nextProps)) return true
+  //  return false
+  // }
+
   render() {
-   // console.log('Props App', this.props)
+    console.log('Props App', this.props)
     const {user, loading} = this.props
-    // console.log(loading)
 
     return (
         <div className="App">
@@ -30,7 +38,7 @@ class App extends Component {
              {this.props.fuckyou}
             </p>
             <button onClick={this.props.setName}>Click me</button>
-          <Test/>
+          <Test user={user} loading={loading}/>
         </div>
 
     );

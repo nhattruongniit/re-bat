@@ -50,7 +50,7 @@ export type WithConnect = (
 ) => (
   mapStateToProps: MapStateToProps,
   mapDispatchToProps: MapDispatchToProps
-)  => (Component: React$ComponentType<*>) => (props: GlobalProps) => any
+)  => (Component: any) => (props: GlobalProps) => any
 
 export type Context = {
   Consumer: Consumer,

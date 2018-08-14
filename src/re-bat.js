@@ -10,19 +10,13 @@ import type { CurrentComponent, Dispatch, Context, Subscribe, CreateStore, GetSt
 
 /*
 * @param {globalConfig} is Object has modules containes all state and actions what you want save to store
-* @returns {
-Provider,
-connect,
-dispatch,
-getState,
-subscribe
-}
+* @returns {Provider, connect, dispatch, getState, subscribe }
 */
 
 const createStore: CreateStore = globalConfig => {
   if (typeof globalConfig !== 'object')
     throw new Error('globalConfig must be object')
-    // const { initialState, actions } = globalConfig
+
   const {root, logger} = globalConfig
 
   let initialState = {}
@@ -32,7 +26,7 @@ const createStore: CreateStore = globalConfig => {
   initialState = getInitial(root, 'initialState')
   actions = getInitial(root, 'actions')
 
-  const Context: Context = React.createContext()
+  const context: Context = React.createContext()
 
   let provider
   let isDispatching = false
@@ -43,7 +37,7 @@ const createStore: CreateStore = globalConfig => {
   * @param {seft} is Provider Component
   */
 
-  const currentComponent = self => {
+  const currentComponent: CurrentComponent = self => {
     provider = {
       setState: (type, key, state, isLogger, callback) => self.customSetState(type, key, state, isLogger, callback)
     }
@@ -62,7 +56,7 @@ const createStore: CreateStore = globalConfig => {
       throw new Error('Listener must be funtion')
 
     if (isDispatching)
-      throw new Error('Something is executing, wait some seconds')
+      consoleError('Can not subscribe when dispatch function...')
 
     listeners = [
       ...listeners,
@@ -86,7 +80,7 @@ const createStore: CreateStore = globalConfig => {
 
   const getState: GetState = () => {
     if (isDispatching)
-      throw new Error('Something is executing, wait some seconds')
+      consoleError('Can not get state when dispatch function...')
 
     return state
   }
@@ -101,12 +95,12 @@ const createStore: CreateStore = globalConfig => {
       throw new Error('<Provider /> is undefined')
 
     if (typeof key !== 'string' && !actions[key] && !state[key]) {
-      consoleError('Key is undefined')
+      consoleError(`Can not find ${key} in root`)
       return
     }
 
     if (!actions[key] || !actions[key][type] || typeof actions[key][type] !== 'function') {
-      consoleError('Actions is not function')
+      consoleError(`Action ${type} can not find in ${key}`)
       return
     }
 
@@ -145,8 +139,8 @@ const createStore: CreateStore = globalConfig => {
 
   }
 
-  const Provider = withProvider(initialState, Context.Provider, currentComponent)
-  const connect = withConnect(Context.Consumer, dispatch)
+  const Provider = withProvider(initialState, context.Provider, currentComponent)
+  const connect = withConnect(context.Consumer, dispatch)
 
   return {Provider, connect, dispatch, getState, subscribe}
 

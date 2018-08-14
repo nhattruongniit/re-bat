@@ -41,7 +41,7 @@ describe('Re-Bat', () => {
 
   })
 
-  it('<Provider /> is stored date', () => {
+  it('<Provider /> is stored data', () => {
     const { Provider } = store
 
     const wrapper = shallow(<Provider>
@@ -179,9 +179,6 @@ describe('Re-Bat', () => {
     dispatch('decrement', 'module1')()
 
     expect(getState().module1.count).toEqual(1)
-
-
-
 
   })
 

@@ -7,13 +7,13 @@ class Test extends Component {
   render() {
     // console.log('Props test ',this.props)
     const {user, loading} = this.props
+    
     return (
-
         <div className="App">
           <h1>{!loading ? user && user.age : 'Loading....'}</h1>
         <div>
           <button onClick={this.props.InCre}>Incre</button>
-        <button onClick={this.props.DeCre}>Decre</button>
+          <button onClick={this.props.DeCre}>Decre</button>
         <p>{this.props.number}</p>
         </div>
         </div>
@@ -23,9 +23,7 @@ class Test extends Component {
 }
 
 export default connect((state) => ({
-  user: state.module1.user,
   number: state.module2.number || 0,
-  loading: state.module1.loading
 }),
 () => ({
   InCre: dispatch('InCre', 'module2'),
