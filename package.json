@@ -43,9 +43,6 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "react-scripts": "1.1.4",
     "babel-cli": "^6.26.0",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
@@ -53,6 +50,10 @@
     "enzyme-adapter-react-16": "^1.2.0",
     "flow-bin": "^0.78.0",
     "jest-enzyme": "^6.0.3",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-scripts": "1.1.4",
     "react-test-renderer": "^16.4.2"
-  }
+  },
+  "dependencies": {}
 }
