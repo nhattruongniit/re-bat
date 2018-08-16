@@ -21,7 +21,7 @@ const actions = {
           completed: false
         }
       ]
-    }),
+  }),
   deleteTodo: ({state}, id) => ({
     ...state,
     todos: state.todos.filter(t => t.id !== id)
@@ -33,6 +33,10 @@ const actions = {
   filterTodo: ({state}, filter) => ({
     ...state,
     filter
+  }),
+  clearComplete: ({state}) => ({
+    ...state,
+    todos: state.todos.filter(t => !t.completed)
   })
 }
 

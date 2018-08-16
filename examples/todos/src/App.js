@@ -8,8 +8,8 @@ import { TodoFooter } from './components/TodoFooter'
 
 class App extends Component {
   render() {
-    const { addTodo, filterTodo, ...rest } = this.props
-    console.log(rest)
+    const { addTodo, filterTodo, clearComplete, ...rest } = this.props
+
     return (
       <div className="App">
         <TodoForm addTodo={addTodo} />
@@ -17,7 +17,7 @@ class App extends Component {
         <TodoList
           {...rest}
            />
-      <TodoFooter filterTodo={filterTodo}/>
+         <TodoFooter filterTodo={filterTodo} clearComplete={clearComplete}/>
 
       </div>
     );
@@ -30,6 +30,7 @@ export default connect(
     addTodo: dispatch('addTodo', 'todos'),
     deleteTodo: dispatch('deleteTodo', 'todos'),
     completeTodo: dispatch('completeTodo', 'todos'),
-    filterTodo: dispatch('filterTodo', 'todos')
+    filterTodo: dispatch('filterTodo', 'todos'),
+    clearComplete: dispatch('clearComplete', 'todos')
   })
 )(App);
