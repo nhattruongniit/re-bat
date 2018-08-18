@@ -17,9 +17,12 @@ class PostList extends Component {
          {posts && posts.length > 0 && posts.map((p,i) => (
           <div key={i} style={{
               marginBottom: 30,
+              marginTop: 30,
               borderBottom: "1px solid black"
             }}>
-             <Link to={`/post/${p.id}`}>Title: {p.title}</Link>
+             <Link style={{
+                 textDecoration: "none"
+               }} to={`/post/${p.id}`}>Title: {p.title}</Link>
 
 
           </div>

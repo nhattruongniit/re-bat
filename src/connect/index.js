@@ -2,7 +2,7 @@
 import * as React from 'react'
 import type {WithConnect}
 from '../utils/types'
-import { isFunc, consoleError} from '../utils'
+import { isFunc, consoleWarn} from '../utils'
 
 /*
 * @param {Consumer} is Context.Consumer
@@ -13,6 +13,7 @@ import { isFunc, consoleError} from '../utils'
 const withConnect: WithConnect = (Consumer, dispatch) => (mapStateToProps, mapDispatchToProps) => Component => {
   let nextProps
   let StoreProps = {}
+  let isCustomShouldUpdate
   const displayName = `Connect(${Component.displayName || Component.name || 'Unknow'})`
 
   const saveProps = value => {
@@ -20,6 +21,17 @@ const withConnect: WithConnect = (Consumer, dispatch) => (mapStateToProps, mapDi
       ...value
     }
   }
+  if(Component.prototype === undefined) {
+    isCustomShouldUpdate = false
+    consoleWarn('Warning: You connect with Functional Component...Your component will re-render even when value has not changed... We recommend use Class Component to connect in Provider')
+  }
+  if(Component.prototype && Component.prototype.shouldComponentUpdate){
+    isCustomShouldUpdate = false
+  }
+  if(Component.prototype && !Component.prototype.shouldComponentUpdate){
+    isCustomShouldUpdate = true
+  }
+
 
   const WrapperComponent = props => (<Consumer>
     {
@@ -43,25 +55,17 @@ const withConnect: WithConnect = (Consumer, dispatch) => (mapStateToProps, mapDi
         * Provider’s value prop changes .... So, there are many component connect to store will re-render even when value hasn't changed
         * We will check prevProps and nextProps of Connected Component and override function shouldComponentUpdate
         */
-        if (StoreProps.prevProps && JSON.stringify(StoreProps.prevProps) === JSON.stringify(nextProps)) {
-          if(Component.prototype === undefined) {
-            consoleError('Warning: You connect with Functional Component...Your component will re-render even when value has not changed... We recommend use Class Component to connect in Provider')
-          }
-          else {
-             Component.prototype.shouldComponentUpdate = function shouldComponentUpdate() {
-              return false
-            }
-          }
-        } else {
-          if(Component.prototype === undefined) {
-            consoleError('Warning: You connect with Functional Component...Your component will re-render even when value has not changed... We recommend use Class Component to connect in Provider')
+        if(isCustomShouldUpdate) {
+          if (StoreProps.prevProps && JSON.stringify(StoreProps.prevProps) === JSON.stringify(nextProps)) {
+               Component.prototype.shouldComponentUpdate = function shouldComponentUpdate() {
+                return false
+              }
           } else {
-              Component.prototype.shouldComponentUpdate = function shouldComponentUpdate() {
-              return true
-            }
+               Component.prototype.shouldComponentUpdate = function shouldComponentUpdate() {
+                return true
+              }
+               saveProps(nextProps)
           }
-
-          saveProps(nextProps)
         }
 
         return (<Component {...nextProps}/>)

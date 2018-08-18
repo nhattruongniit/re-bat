@@ -10,6 +10,11 @@ export const isFunc = value => value && typeof value === 'function'
 export const consoleError = message => console && console.error && console.error(message)
 
 /*
+* @param {message} to console warning in develop tools
+*/
+export const consoleWarn = message => console && console.warn && console.warn(message)
+
+/*
 * @param {type, state, result} is type of actions, prev state, and result after dispatch actions
 */
 export const logger = ({type, state, result}) => {

@@ -27,6 +27,8 @@ class App extends Component {
           <div style={{
               width: 256
             }}>
+            <Link to="/">Home</Link>
+
             <Link to="/add/post"><button>Create Post</button></Link>
             <PostList/>
           </div>
