@@ -2,7 +2,7 @@
 Re-bat is a simple state management for React application...It's built with new Context Api
 ## Before start
 
-If you a person who has experience with react , having problems managing data in the application or want to learn how a state management library work... Of course you're welcome
+If you are person who has experience with react , having problems managing data in the application or want to learn how a state management library work... Of course, you're welcome
 
 ### But
 
@@ -229,3 +229,8 @@ getState function return current state in store
 import { getState } from './store';
 console.log(getState())
 ```
+
+### logger
+The logger mode to help you debug easily
+
+![How re-bat work](http://res.cloudinary.com/lighter/image/upload/v1534686163/Screen_Shot_2018-08-19_at_8.41.54_PM_i3icky.png)

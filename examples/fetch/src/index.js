@@ -7,9 +7,6 @@ import registerServiceWorker from './registerServiceWorker';
 import { BrowserRouter } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 
-console.log(App)
-
-
 ReactDOM.render(
 <Provider>
   <BrowserRouter>
