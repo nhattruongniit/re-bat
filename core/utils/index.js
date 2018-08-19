@@ -18,6 +18,13 @@ export var consoleError = function consoleError(message) {
 };
 
 /*
+* @param {message} to console warning in develop tools
+*/
+export var consoleWarn = function consoleWarn(message) {
+  return console && console.warn && console.warn(message);
+};
+
+/*
 * @param {type, state, result} is type of actions, prev state, and result after dispatch actions
 */
 export var logger = function logger(_ref) {
